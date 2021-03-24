@@ -1,48 +1,78 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    private InputMaster controls;
-    private Rigidbody2D rigidbody;
+    //Cached components
+    private InputMaster myControls;
 
-    private float jumpVelocity = 5;
+    private Rigidbody2D myRigidBody;
+    private Animator myAnimator;
+    private Collider2D myCollider;
+
+    //States
+    private bool isAlive = true;
+
+    //Attributes
+    [SerializeField]
+    private float jumpVelocity = 5f;
+
+    [SerializeField]
+    private float movementSpeed = 1f;
 
     private void Awake()
     {
-        controls = new InputMaster();
-        controls.Player.Jump.performed += context => Jump();
-        rigidbody = transform.GetComponent<Rigidbody2D>();
+        myControls = new InputMaster();
+        myControls.Player.Jump.performed += context => Jump();
+        myRigidBody = GetComponent<Rigidbody2D>();
+        myAnimator = GetComponent<Animator>();
+        myCollider = GetComponent<Collider2D>();
     }
 
     public void Jump()
     {
-        rigidbody.velocity = Vector2.up * jumpVelocity;
-    }
+        if(!myCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
+        {
+            return;
+        }
 
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
+        myRigidBody.velocity = Vector2.up * jumpVelocity;
 
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
+        myAnimator.SetBool(AnimatorStates.Jumping, true);
+        myAnimator.SetBool(AnimatorStates.Running, false);
     }
 
     private void FixedUpdate()
     {
+        MovePlayer();
+
+        if(myCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
+        {
+            myAnimator.SetBool(AnimatorStates.Running, true);
+            myAnimator.SetBool(AnimatorStates.Jumping, false);
+        }
+        else
+        {
+            myAnimator.SetBool(AnimatorStates.Running, false);
+        }
+    }
+
+    private void MovePlayer()
+    {
+        Vector2 playerVelocity = new Vector2(Time.deltaTime * movementSpeed, myRigidBody.velocity.y);
+        myRigidBody.velocity = playerVelocity;
+    }
+
+    private void OnEnable()
+    {
+        myControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        myControls.Disable();
     }
 }

@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 1227154988}
   - component: {fileID: 1227154987}
   - component: {fileID: 1227154986}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1434,6 +1434,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ebee5a62d2bdc46afe12714dfc2747, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpVelocity: 15
+  movementSpeed: 100
 --- !u!1 &1486371591
 GameObject:
   m_ObjectHideFlags: 0
@@ -1486,6 +1488,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1064857133, guid: c0f82f8db4bbeeb469438191c693b78e, type: 3}
+      propertyPath: m_GravityScale
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1035688821771513201, guid: c0f82f8db4bbeeb469438191c693b78e,
         type: 3}
       propertyPath: m_Name

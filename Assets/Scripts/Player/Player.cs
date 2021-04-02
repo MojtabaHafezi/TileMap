@@ -40,15 +40,15 @@ public class Player : MonoBehaviour
         }
 
         myRigidBody.velocity = Vector2.up * jumpVelocity;
-
-        myAnimator.SetBool(AnimatorStates.Jumping, true);
-        myAnimator.SetBool(AnimatorStates.Running, false);
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
+    }
 
+    private void Update()
+    {
         if(myCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
         {
             myAnimator.SetBool(AnimatorStates.Running, true);
@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            myAnimator.SetBool(AnimatorStates.Jumping, true);
             myAnimator.SetBool(AnimatorStates.Running, false);
         }
     }

@@ -14,15 +14,18 @@ public class Player : MonoBehaviour
     private CapsuleCollider2D myBodyCollider;
     private BoxCollider2D myFeetCollider;
 
-    //States
-    private bool isAlive = true;
-
     //Attributes
     [SerializeField]
     private float jumpVelocity = 5f;
 
     [SerializeField]
     private float movementSpeed = 1f;
+
+    [SerializeField]
+    private Vector2 deathKick = new Vector2(5f, 5f);
+
+    private bool isAlive = true;
+    private int health;
 
     private void Awake()
     {
@@ -32,10 +35,16 @@ public class Player : MonoBehaviour
         myAnimator = GetComponent<Animator>();
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
+        isAlive = true;
+        //TODO: Load the health from player prefs
+        health = 2;
     }
 
     public void Jump()
     {
+        if(!isAlive)
+        { return; }
+
         if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
         {
             return;
@@ -46,11 +55,22 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(!isAlive)
+        { return; }
+
         MovePlayer();
     }
 
     private void Update()
     {
+        if(!isAlive)
+        {
+            myRigidBody.velocity = new Vector2(0, 0);
+            return;
+        }
+
+        Hurt();
+
         if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
         {
             myAnimator.SetBool(AnimatorStates.Running, true);
@@ -67,6 +87,34 @@ public class Player : MonoBehaviour
     {
         Vector2 playerVelocity = new Vector2(Time.deltaTime * movementSpeed, myRigidBody.velocity.y);
         myRigidBody.velocity = playerVelocity;
+    }
+
+    private void Hurt()
+    {
+        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemy)))
+        {
+            health--;
+
+            if(health <= 0)
+            {
+                Die();
+            }
+            else
+            {
+                myAnimator.SetBool(AnimatorStates.Hurt, true);
+                myAnimator.SetBool(AnimatorStates.Running, false);
+                myAnimator.SetBool(AnimatorStates.Jumping, false);
+            }
+        }
+    }
+
+    private void Die()
+    {
+        isAlive = false;
+        myRigidBody.velocity = deathKick;
+        myAnimator.SetBool(AnimatorStates.Running, false);
+        myAnimator.SetBool(AnimatorStates.Jumping, false);
+        myAnimator.SetTrigger(AnimatorStates.Die);
     }
 
     private void OnEnable()

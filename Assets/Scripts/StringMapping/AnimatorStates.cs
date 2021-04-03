@@ -8,4 +8,5 @@ public class AnimatorStates
     public const string Idle = "Idle";
     public const string Hurt = "Hurt";
     public const string Jumping = "Jumping";
+    public const string Die = "Die";
 }

@@ -11,7 +11,8 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D myRigidBody;
     private Animator myAnimator;
-    private Collider2D myCollider;
+    private CapsuleCollider2D myBodyCollider;
+    private BoxCollider2D myFeetCollider;
 
     //States
     private bool isAlive = true;
@@ -29,12 +30,13 @@ public class Player : MonoBehaviour
         myControls.Player.Jump.performed += context => Jump();
         myRigidBody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        myCollider = GetComponent<Collider2D>();
+        myBodyCollider = GetComponent<CapsuleCollider2D>();
+        myFeetCollider = GetComponent<BoxCollider2D>();
     }
 
     public void Jump()
     {
-        if(!myCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
+        if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
         {
             return;
         }
@@ -49,7 +51,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if(myCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
         {
             myAnimator.SetBool(AnimatorStates.Running, true);
             myAnimator.SetBool(AnimatorStates.Jumping, false);

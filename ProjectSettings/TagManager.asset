@@ -18,7 +18,7 @@ TagManager:
   - Player
   - Background
   - Camera Confinement
-  - 
+  - Hazards
   - 
   - 
   - 
@@ -44,12 +44,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Foreground
+    uniqueID: 421852749
+    locked: 1
+  - name: Hazards
+    uniqueID: 596808809
+    locked: 0
   - name: Enemy
     uniqueID: 3811050617
     locked: 0
   - name: Player
     uniqueID: 3687614645
     locked: 0
-  - name: Foreground
-    uniqueID: 421852749
-    locked: 1

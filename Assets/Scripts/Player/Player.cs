@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
 
     private void Hurt()
     {
-        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemy)))
+        if(IsDamaged())
         {
             health--;
 
@@ -106,6 +106,22 @@ public class Player : MonoBehaviour
                 myAnimator.SetBool(AnimatorStates.Jumping, false);
             }
         }
+    }
+
+    private bool IsDamaged()
+    {
+        bool isDamaged = false;
+        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemy, LayerNames.Hazards)))
+        {
+            isDamaged = true;
+        }
+
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Hazards)))
+        {
+            isDamaged = true;
+        }
+
+        return isDamaged;
     }
 
     private void Die()

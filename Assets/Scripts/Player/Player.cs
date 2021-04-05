@@ -24,6 +24,11 @@ public class Player : MonoBehaviour
     private float movementSpeed = 1f;
 
     [SerializeField]
+    private float immunityDuration = 1f;
+
+    private float timeHurt = 0f;
+
+    [SerializeField]
     private Vector2 deathKick = new Vector2(5f, 5f);
 
     [SerializeField]
@@ -54,7 +59,7 @@ public class Player : MonoBehaviour
 
     public void Jump()
     {
-        if(!isAlive)
+        if(!isAlive || !isMoving)
         { return; }
 
         if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Ground)))
@@ -82,17 +87,20 @@ public class Player : MonoBehaviour
         }
 
         CheckForDamage();
-        Dissolve();
 
-        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Ground)))
+        if(isAlive)
         {
-            myAnimator.SetBool(States.Running, true);
-            myAnimator.SetBool(States.Jumping, false);
-        }
-        else
-        {
-            myAnimator.SetBool(States.Jumping, true);
-            myAnimator.SetBool(States.Running, false);
+            if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Ground)))
+            {
+                myAnimator.SetBool(States.Running, true);
+                myAnimator.SetBool(States.Jumping, false);
+            }
+            else
+            {
+                myAnimator.SetBool(States.Jumping, true);
+                myAnimator.SetBool(States.Running, false);
+            }
+            Dissolve();
         }
     }
 
@@ -106,8 +114,6 @@ public class Player : MonoBehaviour
     {
         isMoving = false;
         myRigidBody.velocity = new Vector2(0, 0);
-        myAnimator.SetBool(States.Hurt, false);
-        myAnimator.SetBool(States.Die, false);
         myAnimator.SetBool(States.Running, false);
         myAnimator.SetBool(States.Jumping, false);
         myAnimator.enabled = false;
@@ -121,13 +127,14 @@ public class Player : MonoBehaviour
 
             if(health <= 0)
             {
+                health = 0;
                 Die();
             }
             else
             {
-                myAnimator.SetBool(States.Hurt, true);
                 myAnimator.SetBool(States.Running, false);
                 myAnimator.SetBool(States.Jumping, false);
+                myAnimator.SetTrigger(States.Hurt);
             }
         }
     }
@@ -146,7 +153,15 @@ public class Player : MonoBehaviour
             isDamaged = true;
         }
 
-        return isDamaged;
+        if(isDamaged && (Time.time - timeHurt) > immunityDuration)
+        {
+            timeHurt = Time.time;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void Die()

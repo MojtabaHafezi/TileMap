@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.StringMapping;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour
     private Animator myAnimator;
     private CapsuleCollider2D myBodyCollider;
     private BoxCollider2D myFeetCollider;
+    private Material myMaterial;
 
     //Attributes
     [SerializeField]
@@ -24,7 +26,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Vector2 deathKick = new Vector2(5f, 5f);
 
+    [SerializeField]
+    private float fade;
+
     private bool isAlive = true;
+    private bool isMoving = true;
+    private bool startDissolve = false;
     private int health;
 
     private void Awake()
@@ -35,9 +42,14 @@ public class Player : MonoBehaviour
         myAnimator = GetComponent<Animator>();
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
+        myMaterial = GetComponent<SpriteRenderer>().material;
+
         isAlive = true;
+        isMoving = true;
+        startDissolve = false;
         //TODO: Load the health from player prefs
-        health = 2;
+        health = 3;
+        fade = 1f;
     }
 
     public void Jump()
@@ -45,7 +57,7 @@ public class Player : MonoBehaviour
         if(!isAlive)
         { return; }
 
-        if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
+        if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Ground)))
         {
             return;
         }
@@ -55,7 +67,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!isAlive)
+        if(!isAlive || !isMoving)
         { return; }
 
         MovePlayer();
@@ -69,17 +81,18 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Hurt();
+        CheckForDamage();
+        Dissolve();
 
-        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground)))
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Ground)))
         {
-            myAnimator.SetBool(AnimatorStates.Running, true);
-            myAnimator.SetBool(AnimatorStates.Jumping, false);
+            myAnimator.SetBool(States.Running, true);
+            myAnimator.SetBool(States.Jumping, false);
         }
         else
         {
-            myAnimator.SetBool(AnimatorStates.Jumping, true);
-            myAnimator.SetBool(AnimatorStates.Running, false);
+            myAnimator.SetBool(States.Jumping, true);
+            myAnimator.SetBool(States.Running, false);
         }
     }
 
@@ -89,7 +102,18 @@ public class Player : MonoBehaviour
         myRigidBody.velocity = playerVelocity;
     }
 
-    private void Hurt()
+    private void StopPlayer()
+    {
+        isMoving = false;
+        myRigidBody.velocity = new Vector2(0, 0);
+        myAnimator.SetBool(States.Hurt, false);
+        myAnimator.SetBool(States.Die, false);
+        myAnimator.SetBool(States.Running, false);
+        myAnimator.SetBool(States.Jumping, false);
+        myAnimator.enabled = false;
+    }
+
+    private void CheckForDamage()
     {
         if(IsDamaged())
         {
@@ -101,9 +125,9 @@ public class Player : MonoBehaviour
             }
             else
             {
-                myAnimator.SetBool(AnimatorStates.Hurt, true);
-                myAnimator.SetBool(AnimatorStates.Running, false);
-                myAnimator.SetBool(AnimatorStates.Jumping, false);
+                myAnimator.SetBool(States.Hurt, true);
+                myAnimator.SetBool(States.Running, false);
+                myAnimator.SetBool(States.Jumping, false);
             }
         }
     }
@@ -112,12 +136,12 @@ public class Player : MonoBehaviour
     {
         bool isDamaged = false;
 
-        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemy, LayerNames.Hazards)))
+        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Enemy, Layers.Hazards)))
         {
             isDamaged = true;
         }
 
-        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Hazards)))
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Hazards)))
         {
             isDamaged = true;
         }
@@ -129,9 +153,32 @@ public class Player : MonoBehaviour
     {
         isAlive = false;
         myRigidBody.velocity = deathKick;
-        myAnimator.SetBool(AnimatorStates.Running, false);
-        myAnimator.SetBool(AnimatorStates.Jumping, false);
-        myAnimator.SetTrigger(AnimatorStates.Die);
+        myAnimator.SetBool(States.Running, false);
+        myAnimator.SetBool(States.Jumping, false);
+        myAnimator.SetTrigger(States.Die);
+    }
+
+    public void Dissolve()
+    {
+        if(startDissolve)
+        {
+            fade -= Time.deltaTime;
+            if(fade <= 0f)
+            {
+                fade = 0f;
+                startDissolve = false;
+            }
+            myMaterial.SetFloat(Shaders.Fade, fade);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag.Equals(Tags.Finish) && !startDissolve)
+        {
+            StopPlayer();
+            startDissolve = true;
+        }
     }
 
     private void OnEnable()

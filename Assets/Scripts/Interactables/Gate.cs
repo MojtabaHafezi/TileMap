@@ -10,7 +10,8 @@ public class Gate : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        StartCoroutine(LoadNextLevel());
+        //TODO: Mark the level is done
+        //StartCoroutine(LoadNextLevel());
     }
 
     private IEnumerator LoadNextLevel()

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimatorStates
+public class States
 {
     public const string Running = "Running";
     public const string Idle = "Idle";

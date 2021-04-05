@@ -9,4 +9,5 @@ public class States
     public const string Hurt = "Hurt";
     public const string Jumping = "Jumping";
     public const string Die = "Die";
+    public const string Fade = "Fade";
 }

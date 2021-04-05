@@ -111,6 +111,7 @@ public class Player : MonoBehaviour
     private bool IsDamaged()
     {
         bool isDamaged = false;
+
         if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemy, LayerNames.Hazards)))
         {
             isDamaged = true;

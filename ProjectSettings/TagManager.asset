@@ -19,7 +19,7 @@ TagManager:
   - Background
   - Camera Confinement
   - Hazards
-  - 
+  - Interactables
   - 
   - 
   - 
@@ -55,4 +55,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3687614645
+    locked: 0
+  - name: Interactables
+    uniqueID: 218930393
     locked: 0

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.StringMapping
 {
-    public static class Tags
+    public class Tags
     {
-        public const string Finish = "Finish";
-        public const string Player = "Player";
+        public static readonly string Finish = "Finish";
+        public static readonly string Player = "Player";
     }
 }

@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Layers
 {
-    public const string Ground = "Ground";
-    public const string Enemy = "Enemy";
-    public const string Player = "Player";
-    public const string Hazards = "Hazards";
-    
+    public static readonly string Ground = "Ground";
+    public static readonly string Enemy = "Enemy";
+    public static readonly string Player = "Player";
+    public static readonly string Hazards = "Hazards";
 }

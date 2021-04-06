@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.StringMapping
 {
-    public static class Shaders
+    public class Shaders
     {
-        public const string Fade = "_Fade";
+        public static readonly string Fade = "_Fade";
     }
 }

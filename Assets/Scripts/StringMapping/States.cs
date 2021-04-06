@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class States
 {
-    public const string Running = "Running";
-    public const string Idle = "Idle";
-    public const string Hurt = "Hurt";
-    public const string Jumping = "Jumping";
-    public const string Die = "Die";
-    public const string Fade = "Fade";
+    public static readonly string Running = "Running";
+    public static readonly string Idle = "Idle";
+    public static readonly string Hurt = "Hurt";
+    public static readonly string Jumping = "Jumping";
+    public static readonly string Die = "Die";
+    public static readonly string Fade = "Fade";
 }

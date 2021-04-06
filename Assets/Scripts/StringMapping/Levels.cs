@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.StringMapping
 {
-    public static class Levels
+    public class Levels
     {
-        public const string MainMenu = "MainMenu";
+        public static readonly string MainMenu = "MainMenu";
 
-        public const string Finish = "Finish";
+        public static readonly string Finish = "Finish";
     }
 }

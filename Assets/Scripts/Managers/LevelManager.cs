@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.StringMapping;
+﻿using Assets.Scripts.Logging;
+using Assets.Scripts.StringMapping;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,23 +49,43 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(LoadLevelFade(Levels.MainMenu));
     }
 
+    public void ReloadLevel()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        LoadLevel(currentScene.buildIndex);
+    }
+
     public IEnumerator LoadLevelFade(int levelIndex)
     {
-        //Play animation
-        instance.myAnimator.SetTrigger(States.Fade);
-        //Wait
-        yield return new WaitForSeconds(transitionTime);
-        //Load Scene
-        SceneManager.LoadScene(levelIndex);
+        if(levelIndex >= 0 && levelIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            //Play animation
+            instance.myAnimator.SetTrigger(States.Fade);
+            //Wait
+            yield return new WaitForSeconds(transitionTime);
+            //Load Scene
+            SceneManager.LoadScene(levelIndex);
+        }
+        else
+        {
+            Logging.LogError("Invalid Scene Index specified!");
+        }
     }
 
     public IEnumerator LoadLevelFade(string level)
     {
-        //Play animation
-        instance.myAnimator.SetTrigger(States.Fade);
-        //Wait
-        yield return new WaitForSeconds(transitionTime);
-        //Load Scene
-        SceneManager.LoadScene(level);
+        if(Application.CanStreamedLevelBeLoaded(level))
+        {
+            //Play animation
+            instance.myAnimator.SetTrigger(States.Fade);
+            //Wait
+            yield return new WaitForSeconds(transitionTime);
+            //Load Scene
+            SceneManager.LoadScene(level);
+        }
+        else
+        {
+            Logging.LogError("Invalid Scene Name specified!");
+        }
     }
 }

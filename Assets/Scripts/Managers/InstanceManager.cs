@@ -19,5 +19,8 @@ public class InstanceManager : MonoBehaviour
         LevelManager.instance.LoadMainMenu();
     }
 
-
+    public void ReloadLevel()
+    {
+        LevelManager.instance.ReloadLevel();
+    }
 }

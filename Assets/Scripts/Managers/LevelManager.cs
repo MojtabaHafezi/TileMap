@@ -44,9 +44,24 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(LoadLevelFade(levelIndex));
     }
 
+    public void LoadLevel(string levelName)
+    {
+        StartCoroutine(LoadLevelFade(levelName));
+    }
+
     public void LoadMainMenu()
     {
         StartCoroutine(LoadLevelFade(Levels.MainMenu));
+    }
+
+    public void LoadOptions()
+    {
+        StartCoroutine(LoadLevelFade(Levels.Options));
+    }
+
+    public void LoadLevelMap()
+    {
+        StartCoroutine(LoadLevelFade(Levels.LevelMap));
     }
 
     public void ReloadLevel()

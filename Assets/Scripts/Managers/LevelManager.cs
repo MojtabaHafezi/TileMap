@@ -75,11 +75,13 @@ public class LevelManager : MonoBehaviour
         if(levelIndex >= 0 && levelIndex < SceneManager.sceneCountInBuildSettings)
         {
             //Play animation
-            instance.myAnimator.SetTrigger(States.Fade);
+            instance.myAnimator.SetTrigger(AnimationParameters.FadeIn);
             //Wait
             yield return new WaitForSeconds(transitionTime);
             //Load Scene
             SceneManager.LoadScene(levelIndex);
+            //Fade out again after loading the next scene
+            instance.myAnimator.SetTrigger(AnimationParameters.FadeOut);
         }
         else
         {
@@ -92,11 +94,13 @@ public class LevelManager : MonoBehaviour
         if(Application.CanStreamedLevelBeLoaded(level))
         {
             //Play animation
-            instance.myAnimator.SetTrigger(States.Fade);
+            instance.myAnimator.SetTrigger(AnimationParameters.FadeIn);
             //Wait
             yield return new WaitForSeconds(transitionTime);
             //Load Scene
             SceneManager.LoadScene(level);
+            //Fade out again after loading the next scene
+            instance.myAnimator.SetTrigger(AnimationParameters.FadeOut);
         }
         else
         {

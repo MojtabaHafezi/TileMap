@@ -92,13 +92,13 @@ public class Player : MonoBehaviour
         {
             if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask(Layers.Ground)))
             {
-                myAnimator.SetBool(States.Running, true);
-                myAnimator.SetBool(States.Jumping, false);
+                myAnimator.SetBool(AnimationParameters.Running, true);
+                myAnimator.SetBool(AnimationParameters.Jumping, false);
             }
             else
             {
-                myAnimator.SetBool(States.Jumping, true);
-                myAnimator.SetBool(States.Running, false);
+                myAnimator.SetBool(AnimationParameters.Jumping, true);
+                myAnimator.SetBool(AnimationParameters.Running, false);
             }
             Dissolve();
         }
@@ -114,8 +114,8 @@ public class Player : MonoBehaviour
     {
         isMoving = false;
         myRigidBody.velocity = new Vector2(0, 0);
-        myAnimator.SetBool(States.Running, false);
-        myAnimator.SetBool(States.Jumping, false);
+        myAnimator.SetBool(AnimationParameters.Running, false);
+        myAnimator.SetBool(AnimationParameters.Jumping, false);
         myAnimator.enabled = false;
     }
 
@@ -132,9 +132,9 @@ public class Player : MonoBehaviour
             }
             else
             {
-                myAnimator.SetBool(States.Running, false);
-                myAnimator.SetBool(States.Jumping, false);
-                myAnimator.SetTrigger(States.Hurt);
+                myAnimator.SetBool(AnimationParameters.Running, false);
+                myAnimator.SetBool(AnimationParameters.Jumping, false);
+                myAnimator.SetTrigger(AnimationParameters.Hurt);
             }
         }
     }
@@ -168,9 +168,9 @@ public class Player : MonoBehaviour
     {
         isAlive = false;
         myRigidBody.velocity = deathKick;
-        myAnimator.SetBool(States.Running, false);
-        myAnimator.SetBool(States.Jumping, false);
-        myAnimator.SetTrigger(States.Die);
+        myAnimator.SetBool(AnimationParameters.Running, false);
+        myAnimator.SetBool(AnimationParameters.Jumping, false);
+        myAnimator.SetTrigger(AnimationParameters.Die);
     }
 
     public void Dissolve()
